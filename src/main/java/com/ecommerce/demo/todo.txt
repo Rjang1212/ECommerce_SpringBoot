@@ -1,0 +1,5 @@
+Database tables -> User, cart, products, orders -----> Done
+Admin endpoints ----> Done
+products(Done) -> cart(perform user authorization first, then cart) -> checkout (Payment API)
+User login ---> Done
+UI and Integration in the end
