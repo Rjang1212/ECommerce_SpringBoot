@@ -13,18 +13,25 @@ import com.ecommerce.demo.Repository.repositoryCart;
 import com.ecommerce.demo.Repository.repositoryProduct;
 import com.ecommerce.demo.Repository.repositoryUser;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class serviceCart {
     
     @Autowired
     private repositoryCart repositoryCart;
+
+    @Autowired
     private repositoryProduct repositoryProduct;
+
+    @Autowired
     private repositoryUser repositoryUser;
 
     public List<entityCart> getCartItems(){
         return repositoryCart.findAll();
     }
     
+    @Transactional
     public void deleteCartItem(Long cartItemId){
         repositoryCart.deleteById(cartItemId);
         return;

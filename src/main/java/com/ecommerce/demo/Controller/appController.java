@@ -28,4 +28,9 @@ public class appController {
         return serviceProduct.getProductById(id);
     }
 
+    @GetMapping("/a")
+    public String geString(){
+        return "Hello Mac!";
+    }
+
 }

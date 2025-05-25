@@ -16,7 +16,7 @@ public class serviceUser {
     public entityUser getUserByUsername(String Username) throws UsernameNotFoundException {
         entityUser entityUser = repositoryUser.findByName(Username);
 
-        if(entityUser != null) {
+        if(entityUser == null) {
             throw new UsernameNotFoundException(Username);
         }
 

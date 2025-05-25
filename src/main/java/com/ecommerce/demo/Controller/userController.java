@@ -1,14 +1,18 @@
 package com.ecommerce.demo.Controller;
 
+import java.util.Collections;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ecommerce.demo.Config.configSecurity;
 import com.ecommerce.demo.Entity.entityUser;
 import com.ecommerce.demo.Repository.repositoryUser;
 import com.ecommerce.demo.Service.serviceUser;
@@ -28,19 +32,23 @@ public class userController {
     private com.ecommerce.demo.Utility.JwtUtil JwtUtil;
 
     @Autowired
-    private configSecurity configSecurity;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private repositoryUser repositoryUser;
 
     @PostMapping("/login")
-    public String login(@RequestBody entityUser request){
+    public ResponseEntity<?> login(@RequestBody entityUser request){
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(request.getName(), request.getPassword())
         );
 
         entityUser entityUser = serviceUser.getUserByUsername(request.getName());
-        return JwtUtil.generateToken(entityUser.getName());
+        if (entityUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+        }
+        String token = JwtUtil.generateToken(entityUser.getName());
+        return ResponseEntity.ok(Collections.singletonMap("token", token));
     }
 
     @PostMapping("/register")
@@ -54,7 +62,7 @@ public class userController {
 
         entityUser.setEmail(request.getEmail());
         entityUser.setName(request.getName());
-        entityUser.setPassword(configSecurity.passwordEncoder().encode(request.getPassword()));
+        entityUser.setPassword(passwordEncoder.encode(request.getPassword()));
         entityUser.setRole(request.getRole() != null ? request.getRole(): "ROLE_USER");
 
         repositoryUser.save(entityUser);

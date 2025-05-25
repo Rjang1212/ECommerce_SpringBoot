@@ -3,7 +3,6 @@ package com.ecommerce.demo.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.stripe.model.checkout.Session;
@@ -16,9 +15,12 @@ public class paymentController {
     @Autowired
     private servicePayment stripeService;
 
-    @GetMapping("/create-session")
-    public String createCheckoutSession(@RequestParam Long amount) {
+    @GetMapping
+    public String createCheckoutSession() {
         try {
+
+            Long amount = stripeService.getAmount();
+            
             Session session = stripeService.createCheckoutSession(
                 "http://localhost:9090/success",
                 "http://localhost:9090/cancel",
