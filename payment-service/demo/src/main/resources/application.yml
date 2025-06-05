@@ -1,0 +1,14 @@
+spring:
+  kafka:
+    bootstrap-servers: kafka:9092
+    consumer:
+      group-id: payment-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        '[spring.json.type.mapping]': 'order.service.order.DTO.OrderRequest:payment.demo.DTO.OrderRequest'
+        '[spring.json.trusted.packages]': '*'
+    producer:
+      bootstrap-servers: kafka:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer

@@ -13,13 +13,8 @@ public class serviceUser {
     @Autowired
     private repositoryUser repositoryUser;
 
-    public entityUser getUserByUsername(String Username) throws UsernameNotFoundException {
+    public entityUser getUserByUsername(String Username) {
         entityUser entityUser = repositoryUser.findByName(Username);
-
-        if(entityUser == null) {
-            throw new UsernameNotFoundException(Username);
-        }
-
         return entityUser;
     }
 }

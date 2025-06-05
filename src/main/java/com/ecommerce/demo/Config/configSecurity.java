@@ -11,6 +11,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ecommerce.demo.Filter.JWTFilter;
 import com.ecommerce.demo.Service.CustomUserDetailsService;
 
@@ -19,6 +22,8 @@ public class configSecurity {
 
     @Autowired
     private JWTFilter jwtFilter;
+
+    private static final Logger logger = LoggerFactory.getLogger(configSecurity.class);
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity httpSecurity, PasswordEncoder passwordEncoder, CustomUserDetailsService customUserDetailsService) throws Exception {

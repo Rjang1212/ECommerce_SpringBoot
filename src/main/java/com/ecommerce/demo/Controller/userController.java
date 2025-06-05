@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ecommerce.demo.Entity.entityUser;
 import com.ecommerce.demo.Repository.repositoryUser;
 import com.ecommerce.demo.Service.serviceUser;
@@ -37,6 +40,8 @@ public class userController {
     @Autowired
     private repositoryUser repositoryUser;
 
+    private static final Logger logger = LoggerFactory.getLogger(userController.class);
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody entityUser request){
         authenticationManager.authenticate(
@@ -53,19 +58,26 @@ public class userController {
 
     @PostMapping("/register")
     public String register(@RequestBody entityUser request) {
+
+        //logger.info("Getting into /register function");
         
         if(serviceUser.getUserByUsername(request.getName()) != null){
             throw new IllegalArgumentException("user already exists");
         }
 
-        entityUser entityUser = new entityUser();
+        try{
+            entityUser entityUser = new entityUser();
 
-        entityUser.setEmail(request.getEmail());
-        entityUser.setName(request.getName());
-        entityUser.setPassword(passwordEncoder.encode(request.getPassword()));
-        entityUser.setRole(request.getRole() != null ? request.getRole(): "ROLE_USER");
+            entityUser.setEmail(request.getEmail());
+            entityUser.setName(request.getName());
+            entityUser.setPassword(passwordEncoder.encode(request.getPassword()));
+            entityUser.setRole(request.getRole() != null ? request.getRole(): "ROLE_USER");
 
-        repositoryUser.save(entityUser);
+            repositoryUser.save(entityUser);
+
+        } catch(Exception e) {
+            logger.info(e.getMessage());
+        }
 
         return "User registered successfully";
     }
